@@ -2,6 +2,10 @@ package xyz.jmullin.drifter.enrich
 
 import RichGeometry._
 
+/**
+ * Enriched [[Vector2]] providing convenience methods for manipulation.
+ * @param v Wrapped [[Vector2]] instance to enrich.
+ */
 class RichVector2(v: Vector2) {
   def +(o: V2) = v.cpy().add(o)
   def +(n: Float) = v.cpy().add(n, n)
@@ -30,8 +34,8 @@ class RichVector2(v: Vector2) {
   def snap(scale: Float=1f) = V2(math.floor(v.x/scale).toFloat, math.floor(v.y/scale).toFloat)
 
   /**
-   * Gets rid of negative zero situations for reasons of equality. This is probably bad 'cause
-   * we shouldn't be comparing floats anyway...
+   * Gets rid of negative zero situations for reasons of equality. This is almost certainly bad 'cause
+   * we shouldn't be naively comparing floats anyway...
    *
    * @return The vector with negative zero components replaced with positive zero
    */

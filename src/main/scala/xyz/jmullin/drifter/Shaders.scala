@@ -1,46 +1,20 @@
 package xyz.jmullin.drifter
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
-import xyz.jmullin.drifter.enrich.RichGeometry._
-import GdxAlias._
+import xyz.jmullin.drifter.entity.Layer2D
 
+/**
+ * Convenience object for shader switching.  Use switch in the context of a Layer2D to update
+ * the current shader for that layer/batch and handle the context switching and flushing automatically.
+ */
 object Shaders {
-  private var _current = default
-  def current = _current
-
   ShaderProgram.pedantic = false
 
   lazy val default = new ShaderSet("default", "default")
 
-  lazy val df = new ShaderSet("df", "default") {
-    var time = 0f
-
-    override def init(): Unit = {
-      program.setUniformf("gameSize", gameSize)
-    }
-
-    override def tick(): Unit = {
-      time += Gdx.graphics.getDeltaTime
-      program.setUniformf("time", time)
-    }
-  }
-
-  lazy val ball = new ShaderSet("default", "default") {
-    var time = 0f
-
-    override def init(): Unit = {
-      program.setUniformf("lightPosition", V3(1, 2, 1))
-    }
-
-    override def tick(): Unit = {
-      time += Gdx.graphics.getDeltaTime
-    }
-  }
-
-  def switch(s: ShaderSet)(implicit batch: SpriteBatch): Unit = {
-    _current = s
+  def switch(s: ShaderSet)(implicit layer: Layer2D, batch: SpriteBatch): Unit = {
+    layer.currentShader = s
     batch.flush()
     batch.setShader(s.program)
 

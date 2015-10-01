@@ -6,9 +6,13 @@ import com.badlogic.gdx.graphics.g3d.attributes._
 import com.badlogic.gdx.graphics.g3d.shaders.BaseShader
 import com.badlogic.gdx.graphics.g3d.shaders.BaseShader.{Uniform, Setter => SetterGDX}
 import com.badlogic.gdx.graphics.g3d.{Attributes, Renderable, Shader}
+import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.graphics.{Color, GL20}
 import xyz.jmullin.drifter.enrich.RichGeometry._
 
+/**
+ * Basic 3D LibGDX shader implementation in Scala, based on [[com.badlogic.gdx.graphics.g3d.shaders.DefaultShader]].
+ */
 class DrifterShader3D(var renderable: Renderable) extends BaseShader {
   import xyz.jmullin.drifter.entity.DrifterShader3D._
 
@@ -37,9 +41,7 @@ class DrifterShader3D(var renderable: Renderable) extends BaseShader {
   }
 
   override def init(): Unit = {
-    val program = new DrifterShaderProgram(Gdx.files.internal("shader/vertex.glsl"), Gdx.files.internal("shader/fragment.glsl"))
-
-    init(program, renderable)
+    init(new ShaderProgram(Gdx.files.internal("shader/vertex.glsl"), Gdx.files.internal("shader/fragment.glsl")), renderable)
   }
 
   override def render(renderable: Renderable): Unit = {

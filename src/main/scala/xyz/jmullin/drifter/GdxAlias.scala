@@ -3,6 +3,9 @@ package xyz.jmullin.drifter
 import com.badlogic.gdx.Gdx
 import xyz.jmullin.drifter.enrich.RichGeometry._
 
+/**
+ * Short aliases and convenience methods for interacting with Gdx globals.
+ */
 object GdxAlias {
   def mouseX = Gdx.input.getX
   def mouseY = gameH - Gdx.input.getY-3

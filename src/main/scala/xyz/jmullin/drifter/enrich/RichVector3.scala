@@ -2,6 +2,10 @@ package xyz.jmullin.drifter.enrich
 
 import RichGeometry._
 
+/**
+ * Enriched [[Vector3]] providing convenience methods for manipulation.
+ * @param v Wrapped [[Vector3]] instance to enrich.
+ */
 class RichVector3(v: V3) {
   def +(o: V3) = v.cpy().add(o)
   def +(n: Float) = v.cpy().add(n, n, n)

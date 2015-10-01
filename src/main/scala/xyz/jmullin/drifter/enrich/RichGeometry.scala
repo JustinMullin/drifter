@@ -1,8 +1,14 @@
 package xyz.jmullin.drifter.enrich
 
 import com.badlogic.gdx.math.Rectangle
+import scala.language.implicitConversions
 
+/**
+ * Convenience implicits, constructors and type aliases for working with enriched geometry classes.
+ */
 object RichGeometry {
+  // 2d Vectors
+
   type Vector2 = com.badlogic.gdx.math.Vector2
   type V2 = Vector2
   def V2(xy: Float) = new V2(xy, xy)
@@ -10,6 +16,8 @@ object RichGeometry {
 
   implicit def enrichVector2(v: V2) = new RichVector2(v)
   implicit def tupleToRichVector2(t: (Float, Float)) = V2(t._1, t._2)
+
+  // 3d Vectors
 
   type Vector3 = com.badlogic.gdx.math.Vector3
   type V3 = Vector3
@@ -21,8 +29,12 @@ object RichGeometry {
   implicit def enrichVector3(v: V3) = new RichVector3(v)
   implicit def tupleToRichVector3(t: (Float, Float, Float)) = V3(t._1, t._2, t._3)
 
+  // Matrices
+
   type M3 = com.badlogic.gdx.math.Matrix3
   type M4 = com.badlogic.gdx.math.Matrix4
+
+  // Other shapes
 
   type Rect = Rectangle
   def Rect(x: Float, y: Float, width: Float, height: Float) = new Rectangle(x, y, width, height)

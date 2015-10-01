@@ -2,18 +2,12 @@ package xyz.jmullin.drifter.enrich
 
 import com.badlogic.gdx.graphics.Color
 import RichColor._
+import scala.language.implicitConversions
 
-object RichColor {
-  type C = Color
-  def C(r: Float, g: Float, b: Float) = new C(r, g, b, 1.0f)
-  def Ca(r: Float, g: Float, b: Float, a: Float) = new C(r, g, b, a)
-  def Ci(i: Float) = new C(i, i, i, 1.0f)
-
-  implicit def enrichColor(c: C) = new RichColor(c)
-  implicit def tupleToRichColor(t: (Float, Float, Float)) = C(t._1, t._2, t._3)
-  implicit def tupleToRichColor(t: (Float, Float, Float, Float)) = Ca(t._1, t._2, t._3, t._4)
-}
-
+/**
+ * Enriched [[Color]] providing convenience methods for manipulation.
+ * @param c Wrapped [[Color]] instance to enrich.
+ */
 class RichColor(c: Color) {
   // Arithmetic by default does not modify alpha values
   def +(o: C) = c.cpy().add(o.alpha(0))
@@ -36,4 +30,18 @@ class RichColor(c: Color) {
   def /!(n: Float) = c.cpy().mul(1f/n, 1f/n, 1f/n, 1f/n)
 
   def alpha(a: Float) = c.cpy().set(c.r, c.g, c.b, 1f)
+}
+
+/**
+ * Implicits, convenience constructors and aliases for using RichColor.
+ */
+object RichColor {
+  type C = Color
+  def C(r: Float, g: Float, b: Float) = new C(r, g, b, 1.0f)
+  def Ca(r: Float, g: Float, b: Float, a: Float) = new C(r, g, b, a)
+  def Ci(i: Float) = new C(i, i, i, 1.0f)
+
+  implicit def enrichColor(c: C): RichColor = new RichColor(c)
+  implicit def tupleToRichColor(t: (Float, Float, Float)) = C(t._1, t._2, t._3)
+  implicit def tupleToRichColor(t: (Float, Float, Float, Float)) = Ca(t._1, t._2, t._3, t._4)
 }

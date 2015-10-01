@@ -5,6 +5,9 @@ import xyz.jmullin.drifter.enrich.RichGeometry._
 
 import scala.util.Random
 
+/**
+ * Convenience methods for getting simple randomized results.
+ */
 object RandomUtil {
   lazy val rand = new Random(System.currentTimeMillis())
 

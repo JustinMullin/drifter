@@ -4,6 +4,9 @@ import com.badlogic.gdx.InputAdapter
 import xyz.jmullin.drifter.enrich.RichGeometry
 import RichGeometry._
 
+/**
+ * Input adapter that wraps x,y pairs into vectors.
+ */
 class DrifterInput extends InputAdapter {
   final override def touchDown(x: Int, y: Int, pointer: Int, button: Int) = touchDown(V2(x, y), pointer, button)
   final override def touchUp(x: Int, y: Int, pointer: Int, button: Int) = touchUp(V2(x, y), pointer, button)
