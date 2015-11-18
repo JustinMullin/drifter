@@ -2,7 +2,7 @@ package xyz.jmullin.drifter
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d._
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.graphics.glutils.{ShaderProgram, ShapeRenderer}
 import com.badlogic.gdx.graphics.{GL20, Texture}
 import com.badlogic.gdx.utils.Align
 import xyz.jmullin.drifter.enrich.RichGeometry._
@@ -51,11 +51,11 @@ object Draw {
    * }
    * }}}
    */
-  def shapes(kind: ShapeRenderer.ShapeType)(f: ShapeRenderer => Unit)(implicit layer: Layer2D, batch: Batch): Unit = {
+  def shapes(kind: ShapeRenderer.ShapeType, shader: ShaderProgram=Shaders.default.program)(f: ShapeRenderer => Unit)(implicit layer: Layer2D, batch: Batch): Unit = {
     batch.end()
     Gdx.gl.glEnable(GL20.GL_BLEND)
     Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
-    val r = new ShapeRenderer()
+    val r = new ShapeRenderer(5000, shader)
     r.begin(kind)
     r.setProjectionMatrix(layer.camera.combined)
 

@@ -17,9 +17,9 @@ object FloatMath {
 
   def floor(n: Float) = math.floor(n).toFloat
   def ceil(n: Float) = math.ceil(n).toFloat
-  def min(n: Float, m: Float) = math.min(m, n)
-  def max(n: Float, m: Float) = math.max(m, n)
+  def min(m: Float, n: Float) = math.min(m, n)
+  def max(m: Float, n: Float) = math.max(m, n)
   def clamp(n: Float, a: Float, b: Float) = math.max(a, math.min(b, n))
 
-  def pow(n: Float, m: Float) = math.pow(m, n).toFloat
+  def pow(m: Float, n: Float) = math.pow(m, n).toFloat
 }
