@@ -39,6 +39,7 @@ object RichColor {
   type C = Color
   def C(r: Float, g: Float, b: Float) = new C(r, g, b, 1.0f)
   def Ca(r: Float, g: Float, b: Float, a: Float) = new C(r, g, b, a)
+  def Ca(c: Color, a: Float) = new C(c.r, c.g, c.b, a)
   def Ci(i: Float) = new C(i, i, i, 1.0f)
 
   implicit def enrichColor(c: C): RichColor = new RichColor(c)

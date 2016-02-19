@@ -17,4 +17,5 @@ class Easing(val interpolate: Float => Float) {
 object Easing {
   object Linear extends Easing(n => n)
   object Sine extends Easing(n => (1 + sin((n-0.5f)*Pi)) / 2f)
+  object SineBack extends Easing(n => sin(n*Pi*2f - Pi/2f)/2f + 0.5f)
 }

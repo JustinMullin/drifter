@@ -15,7 +15,7 @@ object Draw {
   /**
    * Shared GlyphLayout for calculating text display.  Very not thread safe!
    */
-  var layout = new GlyphLayout()
+  private var layout = new GlyphLayout()
 
   /**
    * Draw a sprite at a given position and size.
@@ -68,6 +68,14 @@ object Draw {
   }
 
   /**
+    * Draw a string with the given location, font and no alignment.
+    */
+  def string(str: String, v: V2, font: BitmapFont)(implicit batch: Batch): Unit = {
+    layout.setText(font, str)
+    font.draw(batch, str, v.x, v.y)
+  }
+
+  /**
    * Draw a string with the given location, font and alignment.
    */
   def string(str: String, v: V2, font: BitmapFont, align: V2)(implicit batch: Batch): Unit = {
@@ -81,5 +89,13 @@ object Draw {
   def stringWrapped(str: String, v: V2, width: Float, font: BitmapFont, align: V2)(implicit batch: Batch): Unit = {
     layout.setText(font, str, font.getColor, width, Align.center, true)
     font.draw(batch, str, v.x - layout.width / 2f, v.y + (align.y + 1) * layout.height * 0.5f)
+  }
+
+  /**
+    * Draw a string with the given location, font and alignment, wrapped to the specified width.
+    */
+  def stringWrapped(str: String, v: V2, start: Int, end: Int, width: Float, font: BitmapFont, hAlign: Int, align: V2)(implicit batch: Batch): Unit = {
+    layout.setText(font, str, start, end, font.getColor, width, hAlign, true, null)
+    font.draw(batch, layout, v.x, v.y)
   }
 }

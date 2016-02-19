@@ -21,5 +21,10 @@ object FloatMath {
   def max(m: Float, n: Float) = math.max(m, n)
   def clamp(n: Float, a: Float, b: Float) = math.max(a, math.min(b, n))
 
+  def degToRad(deg: Float) = deg * Pi / 180f
+  def radToDeg(rad: Float) = rad * 180f / Pi
+
+  def sign(n: Float) = math.signum(n)
+
   def pow(m: Float, n: Float) = math.pow(m, n).toFloat
 }

@@ -115,6 +115,16 @@ class DrifterAssets {
 }
 
 object DrifterAssets {
+  // These placeholders can be used to simplify the task of specifying types in an Assets object.
+  // NOTE: These return null, and should only be used in the context of an Assets object which has yet
+  // to be auto-populated!
+  def texture: Texture = null
+  def font: BitmapFont = null
+  def sound: Sound = null
+  def music: Music = null
+  def skin: Skin = null
+  def atlas: TextureAtlas = null
+
   /**
    * Map of classes to asset types.  Currently the assumption is a single type of asset will always correspond
    * to a single well-defined path and file extension.

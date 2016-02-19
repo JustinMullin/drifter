@@ -9,19 +9,19 @@ import scala.util.Random
  * Convenience methods for getting simple randomized results.
  */
 object RandomUtil {
-  lazy val rand = new Random(System.currentTimeMillis())
+  def probability(p: Double)(implicit r: Random) = r.nextDouble() <= p
+  def rInt(n: Int)(implicit r: Random) = r.nextInt(n)
+  def rInt(n:Int, m:Int)(implicit r: Random) = if(n == m) n else n+r.nextInt(m-n)
+  def rFloat(n: Float)(implicit r: Random) = r.nextFloat()*n
+  def rFloat(n: Float, m: Float)(implicit r: Random) = n+r.nextFloat()*(m-n)
+  def rElement[T](s: Iterable[T])(implicit r: Random) = r.shuffle(s).head
 
-  def probability(p: Double) = rand.nextDouble() <= p
-  def rInt(n: Int) = rand.nextInt(n)
-  def rInt(n:Int, m:Int) = if(n == m) n else n+rand.nextInt(m-n)
-  def rFloat(n: Float) = rand.nextFloat()*n
-  def rFloat(n: Float, m: Float) = n+rand.nextFloat()*(m-n)
-  def rElement[T](s: Iterable[T]) = rand.shuffle(s).head
+  def rV(v: V2)(implicit r: Random) = V2(rFloat(v.x)(r), rFloat(v.y)(r))
+  def rV(a: V2, b: V2)(implicit r: Random) = V2(rFloat(a.x, b.x)(r), rFloat(a.y, b.y)(r))
+  def rV(r: Rect)(implicit ra: Random): V2 = rV(r.v, r.size)(ra)
+  def rV(v: V3)(implicit r: Random) = V3(rFloat(v.x)(r), rFloat(v.y)(r), rFloat(v.z)(r))
+  def rV(a: V3, b: V3)(implicit r: Random) = V3(rFloat(a.x, b.x)(r), rFloat(a.y, b.y)(r), rFloat(a.z, b.z)(r))
+  def rColor(n: Float, m: Float)(implicit r: Random) = C(rFloat(n, m)(r), rFloat(n, m)(r), rFloat(n, m)(r))
 
-  def rV(v: V2) = V2(rFloat(v.x), rFloat(v.y))
-  def rV(a: V2, b: V2) = V2(rFloat(a.x, b.x), rFloat(a.y, b.y))
-  def rV(r: Rect): V2 = rV(r.v, r.size)
-  def rV(v: V3) = V3(rFloat(v.x), rFloat(v.y), rFloat(v.z))
-  def rV(a: V3, b: V3) = V3(rFloat(a.x, b.x), rFloat(a.y, b.y), rFloat(a.z, b.z))
-  def rColor(n: Float, m: Float) = C(rFloat(n, m), rFloat(n, m), rFloat(n, m))
+  def shuffle[T](seq: Seq[T])(implicit r: Random) = r.shuffle(seq)
 }
