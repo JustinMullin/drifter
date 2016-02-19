@@ -15,7 +15,7 @@ import xyz.jmullin.drifter.animation.Animation
  * 
  * Create a class or object which extends from DrifterAssets, and define one field per asset to load.
  * Assets will be loaded from the classpath based on field type, using the class mapping defined in
- * [[DrifterAssets.PrefixMap]] to determine the relative path and file extension to load from.  File names
+ * DrifterAssets.PrefixMap to determine the relative path and file extension to load from.  File names
  * must match the field name specified except in the case of Animation, which takes a suffix indicating the
  * number of frames to load and looks for all files named with that pattern from 1 to N.
  *
@@ -24,13 +24,16 @@ import xyz.jmullin.drifter.animation.Animation
  *
  * After load is completed, call populate() to dump the loaded assets into their respective fields.  After this
  * point these fields can be used to reference assets.
+ *
+ * @param atlasName Optional filename of the TextureAtlas to load sprites from.
  */
-class DrifterAssets {
+class DrifterAssets(atlasName: Option[String] = None) {
   import xyz.jmullin.drifter.assets.DrifterAssets._
 
   val manager = new AssetManager
 
-  var atlas: Option[TextureAtlas] = None
+  var primaryAtlas: Option[TextureAtlas] = None
+  val atlasPath = atlasName.map(name => s"atlas/$name.atlas")
 
   /**
    * Retrieves a list of fields from ''this''.
@@ -43,6 +46,10 @@ class DrifterAssets {
    * Triggers loading of all assets defined in ''this''.
    */
   def load() {
+    atlasPath.foreach { path =>
+      manager.load(path, classOf[TextureAtlas])
+    }
+
     for(field <- fields) {
       if(PrefixMap.contains(field.getType)) {
         manager.load(getAssetPath(field), field.getType)
@@ -61,27 +68,27 @@ class DrifterAssets {
    * Populates the fields of ''this'' with the loaded assets.
    */
   def populate() {
+    primaryAtlas = atlasPath.map { path =>
+      manager.get(path, classOf[TextureAtlas])
+    }
+
     for(field <- fields) {
       if(PrefixMap.contains(field.getType)) {
         val path = getAssetPath(field)
 
         field.setAccessible(true)
         field.set(this, manager.get(path, field.getType))
-
-        if(field.getType == classOf[TextureAtlas]) {
-          atlas = Some(manager.get(path, field.getType).asInstanceOf[TextureAtlas])
-        }
       }
     }
 
     for(field <- fields) {
       if(field.getType == classOf[Sprite]) {
-        if(atlas.isEmpty) {
+        if(primaryAtlas.isEmpty) {
           throw new RuntimeException(f"No texture atlas loaded to pull sprite '${field.getName}' from.  At least one TextureAtlas is required to load Sprites.")
         }
 
         field.setAccessible(true)
-        field.set(this, atlas.get.createSprite(field.getName))
+        field.set(this, primaryAtlas.get.createSprite(field.getName))
       }
       if(field.getType == classOf[Animation]) {
         val pattern = """([a-zA-Z]+)(\d+)""".r
@@ -91,7 +98,7 @@ class DrifterAssets {
             var sprites = Vector[Sprite]()
 
             for(i <- 1 to frames.toInt) {
-              sprites :+= atlas.get.createSprite(baseName, i)
+              sprites :+= primaryAtlas.get.createSprite(baseName, i)
             }
 
             field.setAccessible(true)
@@ -110,7 +117,7 @@ class DrifterAssets {
   }
 
   def dispose() {
-    atlas.map(_.dispose)
+    primaryAtlas.foreach(_.dispose)
   }
 }
 
