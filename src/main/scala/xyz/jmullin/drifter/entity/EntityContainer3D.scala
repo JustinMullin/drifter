@@ -3,6 +3,7 @@ package xyz.jmullin.drifter.entity
 import com.badlogic.gdx.graphics.g3d.{Environment, ModelBatch}
 import xyz.jmullin.drifter.DrifterInput
 import xyz.jmullin.drifter.enrich.RichGeometry._
+import xyz.jmullin.drifter.GdxAlias._
 
 /**
  * General purpose container for Entity3Ds, allows attachment and management of children entities and passes
@@ -16,6 +17,11 @@ trait EntityContainer3D extends DrifterInput {
    * List of all attached children.
    */
   var children = List[Entity3D]()
+
+  /**
+   * If defined, the position the cursor should be locked to for picking purposes.
+   */
+  var mouseLocked: Option[V2] = None
 
   /**
    * Remove an entity from this container and any of its children.
@@ -63,16 +69,18 @@ trait EntityContainer3D extends DrifterInput {
 
   def mouseEvent(v: V2, event: (Entity3D, V3) => Boolean): Boolean = {
     (for(camera <- layer.map(_.camera)) yield {
-      val hits = children.flatMap(e => e.hitPoint(camera.position, camera.direction).map(e -> _))
+      val pickOrigin = mouseLocked.getOrElse(V2(mouseX, gameH-mouseY))
+      println(pickOrigin)
+      val hits = children.flatMap(e => e.hitPoint(camera.getPickRay(pickOrigin.x, pickOrigin.y)).map(e -> _))
       val closest = hits.sortBy { case (entity, hit) => (camera.position - hit).len() }
       closest.exists(event.tupled)
     }).getOrElse(false)
   }
 
-  override def touchDown(v: V2, pointer: Int, button: Int) = mouseEvent(v, _.touchDown(_, button))
-  override def touchUp(v: V2, pointer: Int, button: Int) = mouseEvent(v, _.touchUp(_, button))
-  override def touchDragged(v: V2, pointer: Int) = mouseEvent(v, _.touchDragged(_))
-  override def mouseMoved(v: V2) = mouseEvent(v, _.mouseMoved(_))
+  override def touchDown(v: V2, pointer: Int, button: Int): Boolean = mouseEvent(v, _.touchDown(_, button))
+  override def touchUp(v: V2, pointer: Int, button: Int): Boolean = mouseEvent(v, _.touchUp(_, button))
+  override def touchDragged(v: V2, pointer: Int): Boolean = mouseEvent(v, _.touchDragged(_))
+  override def mouseMoved(v: V2): Boolean = mouseEvent(v, _.mouseMoved(_))
 
   override def keyDown(keycode: Int): Boolean = {
     val hit = children.find(_.keyDown(keycode))

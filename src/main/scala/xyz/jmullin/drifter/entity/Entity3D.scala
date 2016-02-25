@@ -25,23 +25,30 @@ trait Entity3D extends EntityContainer3D with Entity {
    */
   var position = V3(0, 0, 0)
 
+  /**
+   * Optional bounding box for this entity to determine simple collision.
+   */
   var boundingBox: Option[BoundingBox] = None
 
   /**
+   * Called to determine if a ray (typically cast from the camera) intersects with this object.
+   * Default implementation checks for intersection with the entity's bounding box, if present.
    *
-   * @param rayOrigin
-   * @param rayDirection
-   * @return
+   * @param ray Ray cast to determine the hit point.
+   * @return Some containing the point at which the entity was hit, if there was a collision.
+   *         None if there was no collision.
    */
-  def hitPoint(rayOrigin: V3, rayDirection: V3): Option[V3] = {
+  def hitPoint(ray: Ray): Option[V3] = {
     val intersection = V3(0, 0, 0)
-    boundingBox.map { bounds =>
-      Intersector.intersectRayBounds(new Ray(rayOrigin, rayDirection), bounds, intersection)
-      intersection
+    boundingBox.flatMap { bounds =>
+      if(Intersector.intersectRayBounds(ray, bounds, intersection))
+        Some(intersection)
+      else None
     }
   }
 
-  def touchDown(v: V3, button: Int) = false
+  // 3D oriented mouse events
+  def touchDown(v: V3, button: Int) = true
   def touchUp(v: V3, button: Int) = false
   def touchDragged(v: V3) = false
   def mouseMoved(v: V3) = false
