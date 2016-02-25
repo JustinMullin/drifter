@@ -3,6 +3,7 @@ package xyz.jmullin.drifter
 import com.badlogic.gdx._
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20._
+import com.badlogic.gdx.graphics.g3d.utils.{ShaderProvider, DefaultShaderProvider}
 import xyz.jmullin.drifter.GdxAlias._
 import xyz.jmullin.drifter.enrich.RichGeometry._
 import xyz.jmullin.drifter.entity.{Layer, Layer2D, Layer3D}
@@ -37,11 +38,10 @@ class DrifterScreen(background: Color=Color.BLACK) extends DrifterInput with Scr
    * Create and attach a new Layer3D to this screen.
    *
    * @param size Size of the new layer.
-   * @param autoCenter If true, auto-center the layer's viewport.
    * @return The created Layer.
    */
-  def newLayer3D(size: V2, autoCenter: Boolean=false) = {
-    val layer = new Layer3D(size, autoCenter)
+  def newLayer3D(size: V2, fov: Float = 67f, shaderProvider: ShaderProvider = new DefaultShaderProvider) = {
+    val layer = new Layer3D(size, fov, shaderProvider)
     layers ::= layer
     layer
   }
@@ -70,7 +70,7 @@ class DrifterScreen(background: Color=Color.BLACK) extends DrifterInput with Scr
    * @param height New height of the screen.
    */
   def resize(width: Int, height: Int) {
-    layers.foreach(l => l.viewport.update(width, height, l.autoCenter))
+    layers.foreach(l => l.resize(V2(width, height)))
   }
 
   /**

@@ -2,6 +2,7 @@ package xyz.jmullin.drifter.entity
 
 import com.badlogic.gdx.graphics.g3d.{Environment, ModelBatch}
 import xyz.jmullin.drifter.DrifterInput
+import xyz.jmullin.drifter.enrich.RichGeometry._
 
 /**
  * General purpose container for Entity3Ds, allows attachment and management of children entities and passes
@@ -46,7 +47,7 @@ trait EntityContainer3D extends DrifterInput {
    * @param batch Active SpriteBatch to use in drawing.
    */
   def renderChildren(implicit batch: ModelBatch, environment: Environment) {
-    children.map(_.render(batch, environment))
+    children.foreach(_.render(batch, environment))
   }
 
   /**
@@ -55,6 +56,41 @@ trait EntityContainer3D extends DrifterInput {
    * @param delta Time elapsed since the last update tick.
    */
   def updateChildren(delta: Float) {
-    children.map(_.update(delta))
+    children.foreach(_.update(delta))
+  }
+
+  // Input events are aggregated through this container's children and coalesced to a single hit result.
+
+  def mouseEvent(v: V2, event: (Entity3D, V3) => Boolean): Boolean = {
+    (for(camera <- layer.map(_.camera)) yield {
+      val hits = children.flatMap(e => e.hitPoint(camera.position, camera.direction).map(e -> _))
+      val closest = hits.sortBy { case (entity, hit) => (camera.position - hit).len() }
+      closest.exists(event.tupled)
+    }).getOrElse(false)
+  }
+
+  override def touchDown(v: V2, pointer: Int, button: Int) = mouseEvent(v, _.touchDown(_, button))
+  override def touchUp(v: V2, pointer: Int, button: Int) = mouseEvent(v, _.touchUp(_, button))
+  override def touchDragged(v: V2, pointer: Int) = mouseEvent(v, _.touchDragged(_))
+  override def mouseMoved(v: V2) = mouseEvent(v, _.mouseMoved(_))
+
+  override def keyDown(keycode: Int): Boolean = {
+    val hit = children.find(_.keyDown(keycode))
+    hit.isDefined
+  }
+
+  override def keyUp(keycode: Int): Boolean = {
+    val hit = children.find(_.keyUp(keycode))
+    hit.isDefined
+  }
+
+  override def keyTyped(character: Char): Boolean = {
+    val hit = children.find(_.keyTyped(character))
+    hit.isDefined
+  }
+
+  override def scrolled(amount: Int): Boolean = {
+    val hit = children.find(_.scrolled(amount))
+    hit.isDefined
   }
 }

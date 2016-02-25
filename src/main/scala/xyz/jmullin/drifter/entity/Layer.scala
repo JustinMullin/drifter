@@ -13,7 +13,6 @@ import RichGeometry._
  */
 trait Layer extends InputProcessor {
   val viewportSize: V2
-  val autoCenter: Boolean
   var viewport: Viewport = _
 
   var visible = true
@@ -22,4 +21,5 @@ trait Layer extends InputProcessor {
   def update(delta: Float): Unit
   def render(): Unit
   def dispose(): Unit = {}
+  def resize(newSize: V2) = {}
 }

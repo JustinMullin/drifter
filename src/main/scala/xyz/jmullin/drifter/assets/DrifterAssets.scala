@@ -131,6 +131,7 @@ object DrifterAssets {
   def music: Music = null
   def skin: Skin = null
   def atlas: TextureAtlas = null
+  def sprite: Sprite = null
 
   /**
    * Map of classes to asset types.  Currently the assumption is a single type of asset will always correspond

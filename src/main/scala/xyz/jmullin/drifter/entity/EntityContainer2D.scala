@@ -50,7 +50,7 @@ trait EntityContainer2D extends DrifterInput {
   def renderChildren(batch: SpriteBatch) {
     children = children.sortBy(-_.depth)
 
-    children.map(_.render(batch))
+    children.foreach(_.render(batch))
   }
 
   /**
@@ -59,7 +59,7 @@ trait EntityContainer2D extends DrifterInput {
    * @param delta Time elapsed since the last update tick.
    */
   def updateChildren(delta: Float) {
-    children.map(_.update(delta))
+    children.foreach(_.update(delta))
   }
 
   // Input events are aggregated through this container's children and coalesced to a single hit result.
@@ -81,21 +81,6 @@ trait EntityContainer2D extends DrifterInput {
 
   override def mouseMoved(v: V2): Boolean = {
     val hit = children.find(e => e.containsPoint(v) && e.mouseMoved(v))
-    hit.isDefined
-  }
-
-  override def keyDown(keycode: Int): Boolean = {
-    val hit = children.find(_.keyDown(keycode))
-    hit.isDefined
-  }
-
-  override def keyUp(keycode: Int): Boolean = {
-    val hit = children.find(_.keyUp(keycode))
-    hit.isDefined
-  }
-
-  override def keyTyped(character: Char): Boolean = {
-    val hit = children.find(_.keyTyped(character))
     hit.isDefined
   }
 

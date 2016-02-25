@@ -1,6 +1,9 @@
 package xyz.jmullin.drifter.entity
 
+
 import com.badlogic.gdx.graphics.g3d.{Environment, ModelBatch}
+import com.badlogic.gdx.math.Intersector
+import com.badlogic.gdx.math.collision.{BoundingBox, Ray}
 import xyz.jmullin.drifter.enrich.RichGeometry._
 
 /**
@@ -21,6 +24,27 @@ trait Entity3D extends EntityContainer3D with Entity {
    * World position of the entity.
    */
   var position = V3(0, 0, 0)
+
+  var boundingBox: Option[BoundingBox] = None
+
+  /**
+   *
+   * @param rayOrigin
+   * @param rayDirection
+   * @return
+   */
+  def hitPoint(rayOrigin: V3, rayDirection: V3): Option[V3] = {
+    val intersection = V3(0, 0, 0)
+    boundingBox.map { bounds =>
+      Intersector.intersectRayBounds(new Ray(rayOrigin, rayDirection), bounds, intersection)
+      intersection
+    }
+  }
+
+  def touchDown(v: V3, button: Int) = false
+  def touchUp(v: V3, button: Int) = false
+  def touchDragged(v: V3) = false
+  def mouseMoved(v: V3) = false
 
   /**
    * Called by the parent container when this entity is added to it.  Override to perform some

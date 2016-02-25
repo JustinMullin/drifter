@@ -41,7 +41,7 @@ class DrifterShader3D(var renderable: Renderable) extends BaseShader {
   }
 
   override def init(): Unit = {
-    init(new ShaderProgram(Gdx.files.internal("shader/vertex.glsl"), Gdx.files.internal("shader/fragment.glsl")), renderable)
+    init(new ShaderProgram(Gdx.files.internal("shader/default3d.vert"), Gdx.files.internal("shader/default3d.frag")), renderable)
   }
 
   override def render(renderable: Renderable): Unit = {

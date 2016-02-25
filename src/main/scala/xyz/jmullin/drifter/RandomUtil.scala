@@ -6,9 +6,16 @@ import xyz.jmullin.drifter.enrich.RichGeometry._
 import scala.util.Random
 
 /**
- * Convenience methods for getting simple randomized results.
+ * Convenience methods for getting simple randomized results. Random functions require an implicit
+ * [[scala.util.Random]] instance. This allows for a fixed seed if repeatable random behavior is desirable.
+ * A global [[Random]] instance with a nanotime seed is available at RandomUtil.Implicits.global if you prefer
+ * not to supply your own.
  */
 object RandomUtil {
+  object Implicits {
+    val global = new Random()
+  }
+
   def probability(p: Double)(implicit r: Random) = r.nextDouble() <= p
   def rInt(n: Int)(implicit r: Random) = r.nextInt(n)
   def rInt(n:Int, m:Int)(implicit r: Random) = if(n == m) n else n+r.nextInt(m-n)

@@ -84,6 +84,8 @@ class Layer2D(val viewportSize: V2, val autoCenter: Boolean, shader: ShaderSet=S
     super.touchDown(unproject(v), pointer, button)
   }
 
+  override def resize(newSize: V2): Unit = viewport.update(newSize.x.toInt, newSize.y.toInt, autoCenter)
+
   override def touchUp(v: V2, pointer: Int, button: Int): Boolean = {
     // Ignore touch events if inactive
     if(!active) false else
