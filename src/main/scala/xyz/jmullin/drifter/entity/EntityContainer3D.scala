@@ -70,7 +70,6 @@ trait EntityContainer3D extends DrifterInput {
   def mouseEvent(v: V2, event: (Entity3D, V3) => Boolean): Boolean = {
     (for(camera <- layer.map(_.camera)) yield {
       val pickOrigin = mouseLocked.getOrElse(V2(mouseX, gameH-mouseY))
-      println(pickOrigin)
       val hits = children.flatMap(e => e.hitPoint(camera.getPickRay(pickOrigin.x, pickOrigin.y)).map(e -> _))
       val closest = hits.sortBy { case (entity, hit) => (camera.position - hit).len() }
       closest.exists(event.tupled)
