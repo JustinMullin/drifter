@@ -1,6 +1,6 @@
 package xyz.jmullin.drifter.enrich
 
-import RichGeometry._
+import xyz.jmullin.drifter.enrich.RichGeometry._
 
 /**
  * Enriched [[Vector2]] providing convenience methods for manipulation.
@@ -32,6 +32,9 @@ class RichVector2(v: Vector2) {
   def round = V2(math.round(v.x).toFloat, math.round(v.y).toFloat).fixZeroes
 
   def snap(scale: Float=1f) = V2(math.floor(v.x/scale).toFloat, math.floor(v.y/scale).toFloat)
+
+  def neighbors = for(x <- -1 to 1; y <- -1 to 1; if x != 0 || y != 0) yield v + V2(x, y)
+  def orthogonal = for(x <- -1 to 1; y <- -1 to 1; if math.abs(x)+math.abs(y) == 1) yield v + V2(x, y)
 
   /**
    * Gets rid of negative zero situations for reasons of equality. This is almost certainly bad 'cause

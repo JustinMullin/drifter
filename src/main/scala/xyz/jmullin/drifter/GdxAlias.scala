@@ -8,7 +8,7 @@ import xyz.jmullin.drifter.enrich.RichGeometry._
  */
 object GdxAlias {
   def mouseX = Gdx.input.getX
-  def mouseY = gameH - Gdx.input.getY-3
+  def mouseY = gameH - Gdx.input.getY
   def mouseV = V2(mouseX, mouseY)
   def rawMouseV = V2(Gdx.input.getX, Gdx.input.getY)
   def mouseVelocity = V2(Gdx.input.getDeltaX, Gdx.input.getDeltaY)
