@@ -1,5 +1,7 @@
 package xyz.jmullin.drifter.enrich
 
+import xyz.jmullin.drifter.FloatMath._
+import xyz.jmullin.drifter.VectorHex
 import xyz.jmullin.drifter.enrich.RichGeometry._
 
 /**
@@ -51,6 +53,8 @@ class RichVector2(v: Vector2) {
     val difference = (b-v).abs
     difference.x + difference.y
   }
+
+  def toHex(size: V2) = VectorHex((v.x * sqrt(3)/3 - v.y / 3) / size.x, v.y * 2/3 / size.y).snap
 
   // SWIZZLING
 

@@ -31,4 +31,5 @@ object FloatMath {
   def sign(n: Float) = math.signum(n)
 
   def pow(m: Float, n: Float) = math.pow(m, n).toFloat
+  def sqrt(n: Float) = math.sqrt(n).toFloat
 }
